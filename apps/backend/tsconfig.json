@@ -1,5 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@prisma/__generated__": ["./prisma/__generated__"],
+      "@prisma/__generated__/*": ["./prisma/__generated__/*"]
+    }
+  },
   "files": [],
   "include": [],
   "references": [
