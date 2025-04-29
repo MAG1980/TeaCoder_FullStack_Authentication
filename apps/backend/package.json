@@ -39,6 +39,17 @@
           }
         }
       },
+      "dev": {
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@tea-coder-full-stack-authentication/backend:build",
+          "runBuildTargetDependencies": false
+        }
+      },
       "test": {
         "options": {
           "passWithNoTests": true
