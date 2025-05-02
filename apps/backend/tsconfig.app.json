@@ -2,14 +2,22 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": ["node"],
-    "rootDir": "src",
+    "types": [
+      "node"
+    ],
+    "rootDirs": [
+      "src",
+      "prisma"
+    ],
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021"
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "prisma/**/*.ts"
+  ],
   "exclude": [
     "out-tsc",
     "dist",
