@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { hash } from 'argon2'
 import { PrismaService } from '../prisma/prisma.service'
-import { AuthMethod } from '../__generated__'
+import { AuthMethod, User } from '../__generated__'
 
 @Injectable()
 export class UserService {
@@ -45,8 +45,8 @@ export class UserService {
       authMethod: AuthMethod,
       isVerified: boolean,
     },
-  ) {
-    const { password: hashedPassword, ...userWithoutPassword } = await this.prismaService.user.create({
+  ): Promise<User> {
+    const createdUser = await this.prismaService.user.create({
         data: {
           email,
           //При регистрации через OAuth2 не получаем пароль, поэтому заполняем пустой строкой.
@@ -62,6 +62,6 @@ export class UserService {
       },
     )
 
-    return userWithoutPassword
+    return createdUser
   }
 }

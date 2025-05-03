@@ -1,26 +1,30 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { UserService } from '../user/user.service'
 import { RegisterDto } from './dto/register.dto'
 import { AuthMethod } from '../../prisma/__generated__'
+import { UserModel } from '../../prisma/__generated__/models/User'
+import { Request } from 'express'
 
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async register(regiserDto: RegisterDto) {
-    const user = await this.userService.findByEmail(regiserDto.email)
+  async register(req: Request, registerDto: RegisterDto) {
+    const user = await this.userService.findByEmail(registerDto.email)
 
-    if ( user ) {
+    if (user) {
       throw new ConflictException('The user with such email already exists')
     }
 
-    return await this.userService.create({
-      ...regiserDto,
+    const newUser = await this.userService.create({
+      ...registerDto,
       picture: '',
       authMethod: AuthMethod.CREDENTIALS,
       isVerified: false,
     })
+
+    return this.saveSession(req, newUser)
   }
 
   async login() {
@@ -29,6 +33,20 @@ export class AuthService {
   async logout() {
   }
 
-  private async saveSession() {
+  private async saveSession(req: Request, user: UserModel) {
+    return new Promise((resolve, reject) => {
+      req.session.userId = user.id
+
+      //Сохраняем userId в сессии.
+      req.session.save(error => {
+        if (error) {
+          return reject(
+            new InternalServerErrorException('Session not saved. Check parameters'),
+          )
+        }
+
+        resolve ({ user })
+      })
+    })
   }
 }
