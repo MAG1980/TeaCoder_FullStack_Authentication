@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common'
+import { Body, Controller, HttpCode, Post, Req, Res } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { HttpStatusCode } from 'axios'
 import { RegisterDto } from './dto/register.dto'
-import type { Request } from 'express'
+import type { Request, Response } from 'express'
+import { LoginDto } from './dto/login.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +15,15 @@ export class AuthController {
     return await this.authService.register(req, registerDto)
   }
 
-  async login() {
-    return await this.authService.login()
+  @Post('login')
+  @HttpCode(HttpStatusCode.Ok)
+  async login(@Req() req: Request, @Body() loginDto: LoginDto) {
+    return await this.authService.login(req, loginDto)
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatusCode.Ok)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return await this.authService.logout(req, res)
   }
 }
