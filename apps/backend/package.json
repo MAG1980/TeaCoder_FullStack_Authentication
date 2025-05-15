@@ -71,7 +71,8 @@
     "connect-redis": "^8.0.3",
     "cookie-parser": "^1.4.7",
     "express-session": "^1.18.1",
-    "ioredis": "^5.6.1"
+    "ioredis": "^5.6.1",
+    "nestjs-fetch": "^0.2.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
